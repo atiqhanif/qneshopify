@@ -17,6 +17,15 @@
   --lift-up-value: -20px; /* adjust this value to move higher/lower */
 }
 
+/* Quick-fix v2: more specific — target homepage product / spotlight blocks only.
+   Adjust --lift-up-value to control how much the block is visually lifted.
+   This uses transform (visual only) and removes extra top-gap that may come from section wrappers. */
+
+:root {
+  --lift-up-value-desktop: -28px; /* adjust: negative => moves up, positive => down */
+  --lift-up-value-mobile: -12px;
+}
+
 /* Apply to common homepage/section wrappers (only visual shift) */
 body.template-index .page-width,
 body.template-index .halo-block,
@@ -33,7 +42,62 @@ body.template-index .halo-block > .container {
   will-change: transform;
 }
 
-/* Responsive tweaks: reduce shift on small screens */
-@media (max-width: 767px) {
-  :root{ --lift-up-value: -10px; }
+/* Target common halo/section wrappers used by product blocks on homepage */
+body.template-index
+  [data-section-type^="product-block"],
+body.template-index
+  [data-section-type*="spotlight-block"],
+body.template-index
+  [data-section-type*="product-block-"]{
+    /* make container visually higher */
+    transform: translateY(var(--lift-up-value-desktop));
+    will-change: transform;
+    /* reset unexpected top padding if any */
+    padding-top: 0 !important;
+    margin-top: 0 !important;
 }
+
+/* If inner container exists, nudge it instead (safer) */
+body.template-index
+  [data-section-type^="product-block"] .halo-block__content,
+body.template-index
+  [data-section-type*="spotlight-block"] .halo-block__content {
+    transform: translateY(var(--lift-up-value-desktop));
+    will-change: transform;
+}
+
+/* If theme uses .page-width / .container wrappers inside sections */
+body.template-index .halo-block .page-width,
+body.template-index .halo-block .container {
+  transform: translateY(var(--lift-up-value-desktop));
+}
+
+/* Make adjustments smaller on mobile */
+@media (max-width: 767px) {
+  body.template-index
+    [data-section-type^="product-block"],
+  body.template-index
+    [data-section-type*="spotlight-block"],
+  body.template-index
+    [data-section-type*="product-block-"],
+  body.template-index
+    .halo-block .page-width,
+  body.template-index
+    .halo-block .container,
+  body.template-index
+    [data-section-type^="product-block"] .halo-block__content {
+    transform: translateY(var(--lift-up-value-mobile));
+  }
+}
+
+/* Optional helper class: if you want to target a single block later, add 'lift-up' to that section wrapper */
+.halo-block.lift-up,
+.page-width.lift-up,
+.container.lift-up {
+  transform: translateY(var(--lift-up-value-desktop)) !important;
+}
+
+/* Notes:
+   - If this still doesn't align, tell me exact selector shown by Inspect Element (right-click -> Inspect) for the block that must move.
+   - To increase/decrease movement, change --lift-up-value-desktop / --lift-up-value-mobile.
+*/
