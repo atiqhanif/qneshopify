@@ -9,3 +9,31 @@
 // Please use only CSS to style the layout.
 //
 // =============================================================================*/
+
+/* Quick-fix: lift container visually one level up.
+   Use small negative offset; adjust --lift-up-value as needed (e.g. -20px, -30px).
+   Applies to homepage sections and provides a general helper for sections. */
+:root{
+  --lift-up-value: -20px; /* adjust this value to move higher/lower */
+}
+
+/* Apply to common homepage/section wrappers (only visual shift) */
+body.template-index .page-width,
+body.template-index .halo-block,
+.page-width.lift-up,
+.halo-block.lift-up {
+  transform: translateY(var(--lift-up-value));
+  will-change: transform;
+}
+
+/* If you want to target only the inner .container */
+body.template-index .page-width > .container,
+body.template-index .halo-block > .container {
+  transform: translateY(var(--lift-up-value));
+  will-change: transform;
+}
+
+/* Responsive tweaks: reduce shift on small screens */
+@media (max-width: 767px) {
+  :root{ --lift-up-value: -10px; }
+}
