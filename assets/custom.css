@@ -101,3 +101,98 @@ body.template-index .halo-block .container {
    - If this still doesn't align, tell me exact selector shown by Inspect Element (right-click -> Inspect) for the block that must move.
    - To increase/decrease movement, change --lift-up-value-desktop / --lift-up-value-mobile.
 */
+
+/* Quick: make homepage sections edge-to-edge (background/section full viewport width)
+   - inner .page-width / .container stays centered
+   - adjust --content-max to match theme container max-width if needed */
+
+:root{
+  --content-max: 1170px; /* adjust to your theme container max width */
+  --section-side-padding: 16px; /* inner padding for small screens */
+}
+
+/* Target common homepage section wrappers */
+body.template-index
+  [data-section-type^="product-block"],
+body.template-index
+  [data-section-type*="spotlight-block"],
+body.template-index
+  [data-section-type*="brand-slider"],
+body.template-index
+  [data-section-type*="slide-show"],
+body.template-index
+  [data-section-type*="image-banner"] {
+  /* make section occupy full viewport width */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Keep inner content constrained and centered */
+body.template-index
+  [data-section-type^="product-block"] .page-width,
+body.template-index
+  [data-section-type^="product-block"] .container,
+body.template-index
+  [data-section-type*="spotlight-block"] .page-width,
+body.template-index
+  [data-section-type*="spotlight-block"] .container,
+body.template-index
+  [data-section-type*="brand-slider"] .page-width,
+body.template-index
+  [data-section-type*="brand-slider"] .container,
+body.template-index
+  [data-section-type*="slide-show"] .page-width,
+body.template-index
+  [data-section-type*="slide-show"] .container,
+body.template-index
+  [data-section-type*="image-banner"] .page-width,
+body.template-index
+  [data-section-type*="image-banner"] .container {
+  max-width: var(--content-max);
+  width: calc(100% - (var(--section-side-padding) * 2));
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--section-side-padding);
+  padding-right: var(--section-side-padding);
+  box-sizing: border-box;
+}
+
+/* Optional helper class to force a single section edge-to-edge in editor:
+   add "lift-edge" class to section wrapper (via inspector or theme editor custom class) */
+.halo-block.lift-edge,
+[data-section-type].lift-edge {
+  width: 100vw !important;
+  left: 50% !important;
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Responsive tweaks */
+@media (max-width: 1024px) {
+  :root{
+    --content-max: calc(100% - 40px);
+    --section-side-padding: 12px;
+  }
+  body.template-index
+    [data-section-type^="product-block"] .page-width,
+  body.template-index
+    [data-section-type^="product-block"] .container {
+    width: calc(100% - (var(--section-side-padding) * 2));
+  }
+}
+
+@media (max-width: 480px) {
+  :root{
+    --section-side-padding: 10px;
+  }
+}
